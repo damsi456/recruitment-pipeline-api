@@ -26,16 +26,21 @@ public class CandidateService {
         return candidateRepository.findById(id);
     }
 
-    public List<Candidate> getCandidatesByStage(ApplicationStage stage) {
-        return candidateRepository.findByApplicationStage(stage);
+    public Candidate saveCandidate(Candidate candidate) {
+        return candidateRepository.save(candidate);
     }
 
-    public Candidate saveCandidate(Candidate candidate) {
+    public Candidate updateCandidate(String id, Candidate candidate) {
+        candidate.setId(id);
         return candidateRepository.save(candidate);
     }
 
     public void deleteCandidate(String id) {
         candidateRepository.deleteById(id);
+    }
+
+    public List<Candidate> getCandidatesByStage(ApplicationStage stage) {
+        return candidateRepository.findByApplicationStage(stage);
     }
 
 }

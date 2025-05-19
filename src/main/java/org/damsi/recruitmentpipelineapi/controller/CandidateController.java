@@ -32,11 +32,6 @@ public class CandidateController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/stage/{stage}")
-    public ResponseEntity<List<Candidate>> getCandidatesByStage(@PathVariable ApplicationStage stage) {
-        return ResponseEntity.ok(candidateService.getCandidatesByStage(stage));
-    }
-
     @PostMapping
     public ResponseEntity<Candidate> createCandidate(@RequestBody Candidate candidate) {
         return new ResponseEntity<>(candidateService.saveCandidate(candidate), HttpStatus.CREATED);
@@ -46,8 +41,8 @@ public class CandidateController {
     public ResponseEntity<Candidate> updateCandidate(@PathVariable String id, @RequestBody Candidate candidate) {
         return candidateService.getCandidateById(id)
                 .map(existingCandidate -> {
-                    candidate.setId(id);
-                    return ResponseEntity.ok(candidateService.saveCandidate(candidate));
+                    Candidate updatedCandidate = candidateService.updateCandidate(id, candidate);
+                    return ResponseEntity.ok(updatedCandidate);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -61,4 +56,10 @@ public class CandidateController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/stage/{stage}")
+    public ResponseEntity<List<Candidate>> getCandidatesByStage(@PathVariable ApplicationStage stage) {
+        return ResponseEntity.ok(candidateService.getCandidatesByStage(stage));
+    }
+
 }
