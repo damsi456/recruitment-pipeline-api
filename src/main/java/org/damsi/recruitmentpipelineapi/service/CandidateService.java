@@ -4,6 +4,8 @@ import org.damsi.recruitmentpipelineapi.model.ApplicationStage;
 import org.damsi.recruitmentpipelineapi.model.Candidate;
 import org.damsi.recruitmentpipelineapi.repository.CandidateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class CandidateService {
         this.candidateRepository = candidateRepository;
     }
 
-    public List<Candidate> getAllCandidates() {
-        return candidateRepository.findAll();
+    public Page<Candidate> getAllCandidates(Pageable pageable) {
+        return candidateRepository.findAll(pageable);
     }
 
     public Optional<Candidate> getCandidateById(String id) {
@@ -39,8 +41,8 @@ public class CandidateService {
         candidateRepository.deleteById(id);
     }
 
-    public List<Candidate> getCandidatesByStage(ApplicationStage stage) {
-        return candidateRepository.findByApplicationStage(stage);
+    public Page<Candidate> getCandidatesByStage(ApplicationStage stage, Pageable pageable) {
+        return candidateRepository.findByApplicationStage(stage, pageable);
     }
 
 }

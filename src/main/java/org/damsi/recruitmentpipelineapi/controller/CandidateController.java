@@ -4,6 +4,10 @@ import org.damsi.recruitmentpipelineapi.model.ApplicationStage;
 import org.damsi.recruitmentpipelineapi.model.Candidate;
 import org.damsi.recruitmentpipelineapi.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +25,22 @@ public class CandidateController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Candidate>> getAllCandidates() {
-        return ResponseEntity.ok(candidateService.getAllCandidates());
+    public ResponseEntity<Page<Candidate>> getAllCandidates(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "applicationDate") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction
+    ) {
+        // check for the sorting direction
+        Sort sort = direction.equalsIgnoreCase("asc") ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // get page by specifying no and the size
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Candidate> candidatePage = candidateService.getAllCandidates(pageable);
+
+        return ResponseEntity.ok(candidatePage);
     }
 
     @GetMapping("/{id}")
@@ -58,8 +76,22 @@ public class CandidateController {
     }
 
     @GetMapping("/stage/{stage}")
-    public ResponseEntity<List<Candidate>> getCandidatesByStage(@PathVariable ApplicationStage stage) {
-        return ResponseEntity.ok(candidateService.getCandidatesByStage(stage));
-    }
+    public ResponseEntity<Page<Candidate>> getCandidatesByStage(
+            @PathVariable ApplicationStage stage,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "applicationDate") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction
+    ) {
+        // check for the sorting direction
+        Sort sort = direction.equalsIgnoreCase("asc") ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
 
+        // get page by specifying no and the size
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Candidate> candidatePage = candidateService.getCandidatesByStage(stage, pageable);
+
+        return ResponseEntity.ok(candidatePage);
+    }
 }
