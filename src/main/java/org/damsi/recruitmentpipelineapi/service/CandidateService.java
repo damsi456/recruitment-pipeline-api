@@ -26,7 +26,7 @@ public class CandidateService {
         return candidateRepository.findById(id);
     }
 
-    public List<Candidate> getCandidateByStage(ApplicationStage stage) {
+    public List<Candidate> getCandidatesByStage(ApplicationStage stage) {
         return candidateRepository.findByApplicationStage(stage);
     }
 
