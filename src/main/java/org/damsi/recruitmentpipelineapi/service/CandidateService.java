@@ -37,6 +37,14 @@ public class CandidateService {
         return candidateRepository.save(candidate);
     }
 
+    public Optional<Candidate> updateCandidateStage(String id, ApplicationStage newStage) {
+        return candidateRepository.findById(id)
+                .map(candidate -> {
+                    candidate.setApplicationStage(newStage);
+                    return candidateRepository.save(candidate);
+                });
+    }
+
     public void deleteCandidate(String id) {
         candidateRepository.deleteById(id);
     }

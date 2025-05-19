@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/candidates")
@@ -62,6 +63,14 @@ public class CandidateController {
                     Candidate updatedCandidate = candidateService.updateCandidate(id, candidate);
                     return ResponseEntity.ok(updatedCandidate);
                 })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // to update the stage for drag & drop functionality in front-end
+    @PatchMapping("/{id}/stage")
+    public ResponseEntity<Candidate> updateStage(@PathVariable String id, @RequestParam ApplicationStage newStage) {
+        return candidateService.updateCandidateStage(id, newStage)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
